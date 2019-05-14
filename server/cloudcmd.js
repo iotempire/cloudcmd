@@ -16,7 +16,6 @@ const rest = require(DIR + 'rest');
 const route = require(DIR + 'route');
 const validate = require(DIR + 'validate');
 const prefixer = require(DIR + 'prefixer');
-const pluginer = require(DIR + 'plugins');
 const terminal = require(DIR + 'terminal');
 const distribute = require(DIR + 'distribute');
 
@@ -47,14 +46,9 @@ const clean = (a) => a.filter(notEmpty);
 module.exports = (params) => {
     const p = params || {};
     const options = p.config || {};
-    const {
-        modules,
-        plugins,
-    } = p;
+    const {modules} = p;
     
     const keys = Object.keys(options);
-    
-    checkPlugins(plugins);
     
     keys.forEach((name) => {
         let value = options[name];
@@ -77,7 +71,7 @@ module.exports = (params) => {
     if (p.socket)
         listen(prefixSocket, p.socket);
     
-    return cloudcmd(prefix, plugins, modules);
+    return cloudcmd(prefix, modules);
 };
 
 module.exports._getIndexPath = getIndexPath;
@@ -158,7 +152,7 @@ function listen(prefixSocket, socket) {
     distribute.export(socket);
 }
 
-function cloudcmd(prefix, plugins, modules) {
+function cloudcmd(prefix, modules) {
     const online = apart(config, 'online');
     const cache = false;
     const diff = apart(config, 'diff');
@@ -230,7 +224,6 @@ function cloudcmd(prefix, plugins, modules) {
             html: defaultHtml,
         }),
         
-        pluginer(plugins),
         ponseStatic,
     ]);
     
@@ -269,13 +262,5 @@ function setSW(req, res, next) {
         req.url = replaceDist(`/dist${url}`);
     
     next();
-}
-
-function checkPlugins(plugins) {
-    if (typeof plugins === 'undefined')
-        return;
-    
-    if (!Array.isArray(plugins))
-        throw Error('plugins should be an array!');
 }
 

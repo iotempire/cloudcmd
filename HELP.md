@@ -647,10 +647,6 @@ const config = {
     name: 'cloudcmd :)'
 };
 
-const plugins = [
-    __dirname + '/plugin.js'
-];
-
 const filePicker = {
     data: {
         FilePicker: {
@@ -667,7 +663,6 @@ const modules = {
 app.use(prefix, cloudcmd({
     socket,  // used by Config, Edit (optional) and Console (required)
     config,  // config data (optional)
-    plugins, // DEPRECATED, use User Menu instead
     modules, // optional
 }));
 
